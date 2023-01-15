@@ -2,9 +2,8 @@ import mri from 'mri'
 import { homedir } from 'node:os'
 import { resolve } from 'node:path'
 import { existsSync } from 'node:fs'
-import { writeFile } from 'node:fs/promises'
 
-import { readJsonFile } from '~/utils/base'
+import { readJsonFile, writeJsonFile } from '~/utils/base'
 import { createDefaultConfig, type LnpmConfigType } from '~/utils/config'
 
 export default async function setConfig() {
@@ -31,5 +30,5 @@ export async function updateGlobalConfig(globalConfigPath: string, partialGlobal
   // TODO: add validation for new values
   const globalConfig: LnpmConfigType = await readJsonFile(globalConfigPath)
   const newGlobalConfig = { ...globalConfig, ...partialGlobalConfig }
-  await writeFile(globalConfigPath, JSON.stringify(newGlobalConfig))
+  await writeJsonFile(globalConfigPath, newGlobalConfig)
 }

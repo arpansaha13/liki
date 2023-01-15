@@ -1,4 +1,4 @@
-import { readFile } from 'node:fs/promises'
+import { readFile, writeFile } from 'node:fs/promises'
 
 export const rDefault = (r: any) => r.default()
 
@@ -13,4 +13,8 @@ export async function readJsonFile(path: string) {
   // })
   const file = await readFile(path, 'utf8')
   return JSON.parse(file)
+}
+
+export function writeJsonFile(path: string, json: Object): Promise<void> {
+  return writeFile(path, JSON.stringify(json))
 }

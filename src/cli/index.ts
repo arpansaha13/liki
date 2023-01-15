@@ -6,6 +6,8 @@ export default function main() {
   const cmd = args._[0]
 
   switch (cmd) {
+    case 'store':
+      return commands.store()
     case 'config':
       return commands.config()
     default:
