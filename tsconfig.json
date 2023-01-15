@@ -16,12 +16,16 @@
     "allowSyntheticDefaultImports": true,
     "types": [
       "node",
-      "vite/client",
     ],
     "lib": [
       "esnext",
       "dom",
-    ]
+    ],
+    "paths": {
+      "~/*": [
+        "./src/*"
+      ],
+    }
   },
   "include": [
     "src"
