@@ -9,5 +9,5 @@ export default defineBuildConfig({
     '~': resolve(process.cwd(), 'src'),
   },
   entries: ['src/cli'],
-  externals: ['node:url', 'node:path', 'node:child_process', 'node:process', 'node:os'],
+  externals: ['node:url', 'node:path', 'node:fs', 'node:fs/promises', 'node:child_process', 'node:process', 'node:os'],
 })

@@ -10,6 +10,10 @@ export default function main() {
       return commands.store()
     case 'config':
       return commands.config()
+    case 'i':
+    case 'add':
+    case 'install':
+      return commands.install()
     default:
       throw new Error(`Invalid command ${cmd}`)
   }
