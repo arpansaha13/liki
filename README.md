@@ -35,3 +35,9 @@ Install lnpm globally:
 ```bash
 npm install -g lnpm
 ```
+
+## CLI Commands
+
+- [lnpm config](https://github.com/arpansaha13/lnpm/tree/main/docs/config.md)
+- [lnpm store](https://github.com/arpansaha13/lnpm/tree/main/docs/store.md)
+- [lnpm install](https://github.com/arpansaha13/lnpm/tree/main/docs/install.md)
