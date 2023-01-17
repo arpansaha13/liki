@@ -3,9 +3,13 @@ import { homedir } from 'node:os'
 import { resolve } from 'node:path'
 import { existsSync } from 'node:fs'
 
-import { readJsonFile, writeJsonFile } from '~/utils/base'
-import { createDefaultConfig, type LnpmConfigType } from '~/utils/config'
+import { writeJsonFile } from '~/utils/base'
+import { createDefaultConfig, getGlobalConfig, type LnpmConfigType } from '~/utils/config'
 
+/**
+ * ### set &lt;key&gt; &lt;value&gt;
+ * Set the config key to the value provided.
+ */
 export default async function setConfig() {
   const args = mri(process.argv.slice(2))
 
@@ -16,19 +20,15 @@ export default async function setConfig() {
   if (!existsSync(lnpmGlobalDir) || !existsSync(globalConfigPath)) {
     await createDefaultConfig()
   }
-  const partialGlobalConfig: Partial<LnpmConfigType> = {}
   const globalConfigOptions = new Set<keyof LnpmConfigType>(['pkgManager', 'storeDir'])
 
-  for (const option of Object.keys(args)) {
-    if (globalConfigOptions.has(option as keyof LnpmConfigType))
-      partialGlobalConfig[option as keyof LnpmConfigType] = args[option]
-  }
-  updateGlobalConfig(globalConfigPath, partialGlobalConfig)
-}
+  // args._[0] is `config` and args._[1] is `set`
+  const [, , key, value] = args._ // TODO: add validation for new values
 
-export async function updateGlobalConfig(globalConfigPath: string, partialGlobalConfig: Partial<LnpmConfigType>) {
-  // TODO: add validation for new values
-  const globalConfig: LnpmConfigType = await readJsonFile(globalConfigPath)
-  const newGlobalConfig = { ...globalConfig, ...partialGlobalConfig }
-  await writeJsonFile(globalConfigPath, newGlobalConfig)
+  const globalConfig = await getGlobalConfig()
+
+  if (globalConfigOptions.has(key as keyof LnpmConfigType)) {
+    globalConfig[key as keyof LnpmConfigType] = value as any
+  }
+  await writeJsonFile(globalConfigPath, globalConfig)
 }
