@@ -17,7 +17,7 @@ export default async function setConfig() {
     await createDefaultConfig()
   }
   const partialGlobalConfig: Partial<LnpmConfigType> = {}
-  const globalConfigOptions = new Set<keyof LnpmConfigType>(['pkg-manager', 'store-dir'])
+  const globalConfigOptions = new Set<keyof LnpmConfigType>(['pkgManager', 'storeDir'])
 
   for (const option of Object.keys(args)) {
     if (globalConfigOptions.has(option as keyof LnpmConfigType))

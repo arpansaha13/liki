@@ -1,11 +1,29 @@
 import { resolve } from 'node:path'
 import { existsSync } from 'node:fs'
-import { rm, unlink } from 'node:fs/promises'
+import { rm } from 'node:fs/promises'
 
 import mri from 'mri'
 
 import { getGlobalConfig } from '~/utils/config'
 import { isNullOrUndefined } from '~/utils/base'
+
+/**
+ * ## lnpm store remove
+ *
+ * ### Usage
+ *
+ * To remove a particular version of a package from store:
+ *
+ * ```bash
+ *  lnpm store remove <pkg-name> --version=<version>
+ * ```
+ *
+ * To remove all versions of a given package from store:
+ *
+ * ```bash
+ *  lnpm store remove <pkg-name> --remove-all
+ * ```
+ */
 
 export default async function storeRemove() {
   const args = mri(process.argv.slice(2))
@@ -26,12 +44,12 @@ export default async function storeRemove() {
   }
 
   const globalConfig = await getGlobalConfig()
-  if (!existsSync(globalConfig['store-dir'])) {
-    console.error(`Could not resolve global store path: ${globalConfig['store-dir']}`)
+  if (!existsSync(globalConfig.storeDir)) {
+    console.error(`Could not resolve global store path: ${globalConfig.storeDir}`)
     process.exit(1)
   }
   const pkgDirName = pkgName.replace('/', '+')
-  const pkgDirPath = resolve(globalConfig['store-dir'], pkgDirName)
+  const pkgDirPath = resolve(globalConfig.storeDir, pkgDirName)
 
   if (!existsSync(pkgDirPath)) {
     console.error(`No such tarball file "${pkgName}" found in global store.`)

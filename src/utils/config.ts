@@ -6,8 +6,8 @@ import { mkdir } from 'node:fs/promises'
 import { readJsonFile, writeJsonFile } from './base'
 
 export interface LnpmConfigType {
-  'pkg-manager': 'npm' | 'yarn' | 'pnpm'
-  'store-dir': string
+  pkgManager: 'npm' | 'yarn' | 'pnpm'
+  storeDir: string
 }
 
 export async function createDefaultConfig() {
@@ -21,8 +21,8 @@ export async function createDefaultConfig() {
   if (!existsSync(lnpmGlobalConfigPath)) {
     const lnpmStorePath = resolve(lnpmGlobalDirPath, 'store')
     const defaultConfig: LnpmConfigType = {
-      'pkg-manager': 'npm',
-      'store-dir': lnpmStorePath,
+      pkgManager: 'npm',
+      storeDir: lnpmStorePath,
     }
     await writeJsonFile(lnpmGlobalConfigPath, defaultConfig)
   } else {

@@ -27,8 +27,8 @@ export default async function install() {
   }
 
   globalConfig = await getGlobalConfig()
-  if (!existsSync(globalConfig['store-dir'])) {
-    console.error(`Could not resolve global store path: ${globalConfig['store-dir']}`)
+  if (!existsSync(globalConfig.storeDir)) {
+    console.error(`Could not resolve global store path: ${globalConfig.storeDir}`)
     process.exit(1)
   }
 
@@ -36,7 +36,7 @@ export default async function install() {
 }
 
 async function doInstall(args: mri.Argv) {
-  let command = `${globalConfig['pkg-manager']} add`
+  let command = `${globalConfig.pkgManager} add`
   if (args.D) command += ' -D'
   else if (args.P) command += ' -P'
   else if (args.O) command += ' -O'
@@ -47,7 +47,7 @@ async function doInstall(args: mri.Argv) {
 
     const { pkgName, pkgVersion } = await getPkgNameAndVersion(pkgNameAndVersion)
 
-    const pkgDirPath = resolve(globalConfig['store-dir'], pkgName.replace('/', '+'), `v${pkgVersion}`)
+    const pkgDirPath = resolve(globalConfig.storeDir, pkgName.replace('/', '+'), `v${pkgVersion}`)
     const tarballName = await getTarballName(pkgDirPath)
     const installPath = resolve(pkgDirPath, tarballName)
     const installPathRelative = relative(process.cwd(), installPath).replaceAll('\\', '/')
@@ -70,7 +70,7 @@ async function getPkgNameAndVersion(pkgNameAndVersion: string) {
 
 /** Find latest version of package. */
 async function getLatestVersion(pkgName: string): Promise<SemVer> {
-  const sourcePath = resolve(globalConfig['store-dir'], pkgName.replace('/', '+'))
+  const sourcePath = resolve(globalConfig.storeDir, pkgName.replace('/', '+'))
   const dirents = await readdir(sourcePath, { withFileTypes: true })
 
   const versions = dirents
