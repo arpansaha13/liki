@@ -24,13 +24,14 @@ export default async function storeAdd() {
 
   if (isNullOrUndefined(pathToTarball)) {
     console.error(`No path to tarball file provided`)
-    process.exit()
+    process.exit(1)
   }
   if (!existsSync(pathToTarball)) {
     console.error(`No tarball file found with the given path: ${pathToTarball}`)
     process.exit(1)
   }
   const globalConfig = await getGlobalConfig()
+
   if (!existsSync(globalConfig.storeDir)) {
     console.error(`Could not resolve global store path: ${globalConfig.storeDir}`)
     process.exit(1)

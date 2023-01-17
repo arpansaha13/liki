@@ -10,35 +10,30 @@ export interface LnpmConfigType {
   storeDir: string
 }
 
-export async function createDefaultConfig() {
-  const homeLocalDirPath = resolve(homedir(), 'AppData', 'Local')
-  const lnpmGlobalDirPath = resolve(homeLocalDirPath, 'lnpm')
-  const lnpmGlobalConfigPath = resolve(lnpmGlobalDirPath, 'lnpm.config.json')
-
-  if (!existsSync(lnpmGlobalDirPath)) {
-    await mkdir(lnpmGlobalDirPath)
-  }
-  if (!existsSync(lnpmGlobalConfigPath)) {
-    const lnpmStorePath = resolve(lnpmGlobalDirPath, 'store')
-    const defaultConfig: LnpmConfigType = {
-      pkgManager: 'npm',
-      storeDir: lnpmStorePath,
-    }
-    await writeJsonFile(lnpmGlobalConfigPath, defaultConfig)
-  } else {
-    // TODO: prompt for overwriting existing file with default one
-    console.log('A config file already exists.')
-    process.exit(1)
-  }
-}
+/**
+ * Returns the global config if it already exists.
+ * Else creates a new default global config and returns it.
+ */
 export async function getGlobalConfig(): Promise<LnpmConfigType> {
   const homeLocalDir = resolve(homedir(), 'AppData', 'Local')
   const lnpmGlobalDir = resolve(homeLocalDir, 'lnpm')
   const globalConfigPath = resolve(lnpmGlobalDir, 'lnpm.config.json')
 
-  if (!existsSync(lnpmGlobalDir) || !existsSync(globalConfigPath)) {
-    console.log('No global config found.')
-    process.exit()
+  if (!existsSync(lnpmGlobalDir)) {
+    await mkdir(lnpmGlobalDir)
   }
-  return readJsonFile(globalConfigPath)
+  if (existsSync(globalConfigPath)) {
+    return readJsonFile(globalConfigPath)
+  } else {
+    const lnpmStorePath = resolve(lnpmGlobalDir, 'store')
+    const defaultConfig: LnpmConfigType = {
+      pkgManager: 'npm',
+      storeDir: lnpmStorePath,
+    }
+    // Create the default store-dir if it doesn't exist
+    if (!existsSync(lnpmStorePath)) await mkdir(lnpmStorePath)
+
+    await writeJsonFile(globalConfigPath, defaultConfig)
+    return defaultConfig
+  }
 }
