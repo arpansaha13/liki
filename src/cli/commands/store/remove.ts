@@ -4,9 +4,11 @@ import { rm } from 'node:fs/promises'
 
 import mri from 'mri'
 
+import createLogger from '~/logger'
 import { getGlobalConfig } from '~/utils/config'
 import { isNullOrUndefined } from '~/utils/base'
 
+const logger = createLogger()
 /**
  * ## lnpm store remove
  *
@@ -30,14 +32,14 @@ export default async function storeRemove() {
   const pkgName = args._[2]
 
   if (isNullOrUndefined(pkgName)) {
-    console.error('No package name provided')
+    logger.error('No package name provided')
     process.exit(1)
   }
   const removeAllVersions: boolean | undefined = args['remove-all']
   const pkgVersionToRemove: string | undefined = args.version
 
   if (isNullOrUndefined(pkgVersionToRemove) && !removeAllVersions) {
-    console.error(
+    logger.error(
       'No version number provided. Specify a version number with the "--version=<version>" option. If you want to remove all versions of this package then use the "--remove-all" flag.'
     )
     process.exit(1)
@@ -45,22 +47,22 @@ export default async function storeRemove() {
 
   const globalConfig = await getGlobalConfig()
   if (!existsSync(globalConfig.storeDir)) {
-    console.error(`Could not resolve global store path: ${globalConfig.storeDir}`)
+    logger.error(`Could not resolve global store path: ${globalConfig.storeDir}`)
     process.exit(1)
   }
   const pkgDirName = pkgName.replace('/', '+')
   const pkgDirPath = resolve(globalConfig.storeDir, pkgDirName)
 
   if (!existsSync(pkgDirPath)) {
-    console.error(`No such tarball file "${pkgName}" found in global store.`)
+    logger.error(`No such tarball file "${pkgName}" found in global store.`)
     process.exit(1)
   }
 
   if (removeAllVersions) {
     await rm(pkgDirPath, { recursive: true })
-    console.log(`Package "${pkgName}" has been removed from store`)
+    logger.success(`Package "${pkgName}" has been removed from store`)
   } else {
     await rm(resolve(pkgDirPath, `v${pkgVersionToRemove}`), { recursive: true })
-    console.log(`Version "${pkgVersionToRemove}" of package "${pkgName}" has been removed from store`)
+    logger.success(`Version "${pkgVersionToRemove}" of package "${pkgName}" has been removed from store`)
   }
 }

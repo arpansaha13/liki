@@ -5,8 +5,11 @@ import { copyFile, mkdir, rm } from 'node:fs/promises'
 import mri from 'mri'
 import { extract } from 'tar' // 'tar' is probably not tree-shakable
 
+import createLogger from '~/logger'
 import { isNullOrUndefined, readJsonFile } from '~/utils/base'
 import { getGlobalConfig, type LnpmConfigType } from '~/utils/config'
+
+const logger = createLogger()
 
 /**
  * ## lnpm store add
@@ -23,17 +26,17 @@ export default async function storeAdd() {
   const pathToTarball = args._[2]
 
   if (isNullOrUndefined(pathToTarball)) {
-    console.error(`No path to tarball file provided`)
+    logger.error(`No path to tarball file provided`)
     process.exit(1)
   }
   if (!existsSync(pathToTarball)) {
-    console.error(`No tarball file found with the given path: ${pathToTarball}`)
+    logger.error(`No tarball file found with the given path: ${pathToTarball}`)
     process.exit(1)
   }
   const globalConfig = await getGlobalConfig()
 
   if (!existsSync(globalConfig.storeDir)) {
-    console.error(`Could not resolve global store path: ${globalConfig.storeDir}`)
+    logger.error(`Could not resolve global store path: ${globalConfig.storeDir}`)
     process.exit(1)
   }
   await doAdd(pathToTarball, globalConfig)
@@ -44,6 +47,7 @@ async function doAdd(pathToTarball: string, globalConfig: Readonly<LnpmConfigTyp
   const { name: pkgName, version: pkgVersion } = await extractPkgNameAndVersion(pathToTarball, globalConfig)
   const pkgDirPath = resolve(globalConfig.storeDir, pkgName.replace('/', '+'), `v${pkgVersion}`)
   const destPath = resolve(pkgDirPath, tarballName)
+  const logger = createLogger()
 
   // TODO: support relative paths from process.cwd()
   // TODO: add validation for tarball filename - should be of the form "<name>-<version>.tgz"
@@ -52,10 +56,10 @@ async function doAdd(pathToTarball: string, globalConfig: Readonly<LnpmConfigTyp
 
   if (existsSync(destPath)) {
     // TODO: prompt for overwriting if it already exists
-    console.warn(`"${tarballName}" already exists in store. Overwriting the existing tarball`)
+    logger.warn(`"${tarballName}" already exists in store. Overwriting the existing tarball`)
   }
   await copyFile(pathToTarball, destPath)
-  console.log(`"${tarballName}" added to store`)
+  logger.success(`"${tarballName}" added to store`)
 }
 
 async function extractPkgNameAndVersion(

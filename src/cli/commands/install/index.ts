@@ -9,10 +9,12 @@ import semverGt from 'semver/functions/gt'
 import type SemVer from 'semver/classes/semver'
 import semverCoerce from 'semver/functions/coerce'
 
+import createLogger from '~/logger'
 import { isNullOrUndefined } from '~/utils/base'
 import { getGlobalConfig, type LnpmConfigType } from '~/utils/config'
 
 let globalConfig: LnpmConfigType = null!
+const logger = createLogger()
 
 export default async function install() {
   const args = mri(process.argv.slice(2), {
@@ -22,13 +24,13 @@ export default async function install() {
   const pkgNameAndVersion = args._[1]
 
   if (isNullOrUndefined(pkgNameAndVersion)) {
-    console.error('No package name provided')
+    logger.error('No package name provided')
     process.exit(1)
   }
 
   globalConfig = await getGlobalConfig()
   if (!existsSync(globalConfig.storeDir)) {
-    console.error(`Could not resolve global store path: ${globalConfig.storeDir}`)
+    logger.error(`Could not resolve global store path: ${globalConfig.storeDir}`)
     process.exit(1)
   }
 
@@ -62,7 +64,7 @@ async function getPkgNameAndVersion(pkgNameAndVersion: string) {
   const parsed = parse(pkgNameAndVersion)
   const pkgVersion = parsed.version === 'latest' ? await getLatestVersion(parsed.name) : semverCoerce(parsed.version)
   if (pkgVersion === null) {
-    console.error('Internal Error: Invalid version')
+    logger.error('Internal Error: Invalid version')
     process.exit(1)
   }
   return { pkgName: parsed.name, pkgVersion }
@@ -77,7 +79,7 @@ async function getLatestVersion(pkgName: string): Promise<SemVer> {
     .filter(dirent => dirent.isDirectory())
     .map(dirent => {
       const version = semverCoerce(dirent.name)
-      if (version === null) console.warn(`Internal Error: Invalid version directory name "${dirent.name}"`)
+      if (version === null) logger.warn(`Internal Error: Invalid version directory name "${dirent.name}"`)
       return version
     })
     .filter(v => !isNullOrUndefined(v)) as SemVer[]
@@ -92,7 +94,7 @@ async function getTarballName(pkgDirPath: string): Promise<string> {
   const dirents = await readdir(pkgDirPath, { withFileTypes: true })
 
   if (dirents.length > 1) {
-    console.warn(
+    logger.warn(
       `Internal Error: There should be only one tarball file in a pkg-version directory - found ${dirents.length} at ${pkgDirPath}`
     )
   }
