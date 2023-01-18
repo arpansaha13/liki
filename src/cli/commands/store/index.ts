@@ -12,6 +12,8 @@ export default async function store() {
       return import('./add').then(rDefault)
     case 'remove':
       return import('./remove').then(rDefault)
+    case 'path':
+      return import('./path').then(rDefault)
     default:
       throw new Error(`Invalid command ${cmd}`)
   }
