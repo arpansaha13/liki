@@ -36,6 +36,20 @@ Install lnpm globally:
 npm install -g lnpm
 ```
 
+## Usage
+
+First add the local package to store:
+
+```bash
+lnpm store add path/to/package
+```
+
+And then install it in any project by its package name:
+
+```bash
+lnpm add -D <pkg-name>@<version>
+```
+
 ## CLI Commands
 
 - [lnpm config](https://github.com/arpansaha13/lnpm/tree/main/docs/config.md)
