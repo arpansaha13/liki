@@ -9,6 +9,7 @@
   "bin": {
     "liki": "./bin/bin.mjs"
   },
+  "homepage": "https://github.com/arpansaha13/liki#readme",
   "repository": {
     "type": "git",
     "url": "https://github.com/arpansaha13/liki"
