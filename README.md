@@ -36,6 +36,20 @@ Install liki globally:
 npm install -g liki
 ```
 
+## Usage
+
+First add the local package to store:
+
+```bash
+liki store add path/to/package
+```
+
+And then install it in any project by its package name:
+
+```bash
+liki add -D <pkg-name>@<version>
+```
+
 ## CLI Commands
 
 - [liki config](https://github.com/arpansaha13/liki/tree/main/docs/config.md)
