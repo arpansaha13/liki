@@ -5,7 +5,7 @@ export default async function store() {
   const args = mri(process.argv.slice(2))
   const cmd = args._[1]
 
-  if (isNullOrUndefined(cmd)) throw new Error('No command provided after "lnpm store".')
+  if (isNullOrUndefined(cmd)) throw new Error('No command provided after "liki store".')
 
   switch (cmd) {
     case 'add':

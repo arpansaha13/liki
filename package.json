@@ -1,5 +1,5 @@
 {
-  "name": "lnpm",
+  "name": "liki",
   "packageManager": "pnpm@7.21.0",
   "version": "0.1.0",
   "license": "MIT",
@@ -7,17 +7,17 @@
   "description": "A simple node cli to manage local node packages",
   "type": "module",
   "bin": {
-    "lnpm": "./bin/bin.mjs"
+    "liki": "./bin/bin.mjs"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/arpansaha13/lnpm"
+    "url": "https://github.com/arpansaha13/liki"
   },
   "bugs": {
-    "url": "https://github.com/arpansaha13/lnpm/issues"
+    "url": "https://github.com/arpansaha13/liki/issues"
   },
   "keywords": [
-    "lnpm"
+    "liki"
   ],
   "files": [
     "bin",

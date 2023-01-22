@@ -1,12 +1,12 @@
-# lnpm config
+# liki config
 
-Configuration for lnpm.
+Configuration for liki.
 
 ## Commands
 
 ### get
 
-Returns the lnpm config.
+Returns the liki config.
 
 ### set &lt;key&gt; &lt;value&gt;
 

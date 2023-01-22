@@ -10,20 +10,20 @@ import { isNullOrUndefined } from '~/utils/base'
 
 const logger = createLogger()
 /**
- * ## lnpm store remove
+ * ## liki store remove
  *
  * ### Usage
  *
  * To remove a particular version of a package from store:
  *
  * ```bash
- *  lnpm store remove <pkg-name> --version=<version>
+ *  liki store remove <pkg-name> --version=<version>
  * ```
  *
  * To remove all versions of a given package from store:
  *
  * ```bash
- *  lnpm store remove <pkg-name> --remove-all
+ *  liki store remove <pkg-name> --remove-all
  * ```
  */
 

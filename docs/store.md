@@ -1,12 +1,12 @@
-# lnpm store
+# liki store
 
-Manage the lnpm store.
+Manage the liki store.
 
 ## Commands
 
 ### add &lt;path&gt;
 
-Add a new local package to store. `
+Add a new local package to store.
 
 ### set &lt;pkg-name&gt;
 

@@ -1,5 +1,5 @@
 <h1 align="center">
-  Lnpm
+  Liki
 </h1>
 
 <p align="center">
@@ -8,10 +8,10 @@
 
 ## Overview
 
-Lnpm is not a full-fledged package manager on its own. It is simply a node cli to make working with local packages much more convenient. Lnpm maintains a global store on your system where the local packages will be stored. This global store can be configured to any location. Later these packages from the global store can be installed into any project by the package name:
+Liki is not a full-fledged package manager on its own. It is simply a node cli to make working with local packages much more convenient. Liki maintains a global store on your system where the local packages will be stored. This global store can be configured to any location. Later these packages from the global store can be installed into any project by the package name:
 
 ```bash
-lnpm add -D <pkg-name>@<version>
+liki add -D <pkg-name>@<version>
 ```
 
 instead of:
@@ -30,14 +30,14 @@ The actual package installation will be done using your preferred package manage
 
 ## Installation
 
-Install lnpm globally:
+Install liki globally:
 
 ```bash
-npm install -g lnpm
+npm install -g liki
 ```
 
 ## CLI Commands
 
-- [lnpm config](https://github.com/arpansaha13/lnpm/tree/main/docs/config.md)
-- [lnpm store](https://github.com/arpansaha13/lnpm/tree/main/docs/store.md)
-- [lnpm install](https://github.com/arpansaha13/lnpm/tree/main/docs/install.md)
+- [liki config](https://github.com/arpansaha13/liki/tree/main/docs/config.md)
+- [liki store](https://github.com/arpansaha13/liki/tree/main/docs/store.md)
+- [liki install](https://github.com/arpansaha13/liki/tree/main/docs/install.md)

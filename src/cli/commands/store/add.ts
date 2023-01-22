@@ -7,17 +7,17 @@ import { extract } from 'tar' // 'tar' is probably not tree-shakable
 
 import createLogger from '~/logger'
 import { isNullOrUndefined, readJsonFile } from '~/utils/base'
-import { getGlobalConfig, type LnpmConfigType } from '~/utils/config'
+import { getGlobalConfig, type LikiConfigType } from '~/utils/config'
 
 const logger = createLogger()
 
 /**
- * ## lnpm store add
+ * ## liki store add
  *
  * ### Usage
  *
  * ```bash
- *  lnpm store add <absolute-path-to-pkg>
+ *  liki store add <absolute-path-to-pkg>
  * ```
  */
 
@@ -42,7 +42,7 @@ export default async function storeAdd() {
   await doAdd(pathToTarball, globalConfig)
 }
 
-async function doAdd(pathToTarball: string, globalConfig: Readonly<LnpmConfigType>) {
+async function doAdd(pathToTarball: string, globalConfig: Readonly<LikiConfigType>) {
   const tarballName = basename(pathToTarball)
   const { name: pkgName, version: pkgVersion } = await extractPkgNameAndVersion(pathToTarball, globalConfig)
   const pkgDirPath = resolve(globalConfig.storeDir, pkgName.replace('/', '+'), `v${pkgVersion}`)
@@ -64,7 +64,7 @@ async function doAdd(pathToTarball: string, globalConfig: Readonly<LnpmConfigTyp
 
 async function extractPkgNameAndVersion(
   pathToTarball: string,
-  globalConfig: Readonly<LnpmConfigType>
+  globalConfig: Readonly<LikiConfigType>
 ): Promise<{
   name: string
   version: string

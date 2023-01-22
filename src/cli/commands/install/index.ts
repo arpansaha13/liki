@@ -11,9 +11,9 @@ import semverCoerce from 'semver/functions/coerce'
 
 import createLogger from '~/logger'
 import { isNullOrUndefined } from '~/utils/base'
-import { getGlobalConfig, type LnpmConfigType } from '~/utils/config'
+import { getGlobalConfig, type LikiConfigType } from '~/utils/config'
 
-let globalConfig: LnpmConfigType = null!
+let globalConfig: LikiConfigType = null!
 const logger = createLogger()
 
 export default async function install() {
