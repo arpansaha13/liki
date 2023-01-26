@@ -6,9 +6,10 @@ import mri from 'mri'
 import { extract } from 'tar' // 'tar' is probably not tree-shakable
 
 import createLogger from '~/logger'
-import { isNullOrUndefined, readJsonFile } from '~/utils/base'
+import { isNullOrUndefined, makeAbsolute, readJsonFile } from '~/utils/base'
 import { getGlobalConfig, type LikiConfigType } from '~/utils/config'
 
+let globalConfig: Readonly<LikiConfigType> = null!
 const logger = createLogger()
 
 /**
@@ -17,7 +18,7 @@ const logger = createLogger()
  * ### Usage
  *
  * ```bash
- *  liki store add <absolute-path-to-pkg>
+ *  liki store add path/to/pkg
  * ```
  */
 
@@ -33,23 +34,26 @@ export default async function storeAdd() {
     logger.error(`No tarball file found with the given path: ${pathToTarball}`)
     process.exit(1)
   }
-  const globalConfig = await getGlobalConfig()
+  globalConfig = await getGlobalConfig()
 
   if (!existsSync(globalConfig.storeDir)) {
     logger.error(`Could not resolve global store path: ${globalConfig.storeDir}`)
     process.exit(1)
   }
-  await doAdd(pathToTarball, globalConfig)
+  await doAdd(makeAbsolute(pathToTarball))
 }
 
-async function doAdd(pathToTarball: string, globalConfig: Readonly<LikiConfigType>) {
+/**
+ * @param pathToTarball Absolute path to tarball
+ * @param globalConfig
+ */
+async function doAdd(pathToTarball: string) {
   const tarballName = basename(pathToTarball)
-  const { name: pkgName, version: pkgVersion } = await extractPkgNameAndVersion(pathToTarball, globalConfig)
+  const { name: pkgName, version: pkgVersion } = await extractPkgNameAndVersion(pathToTarball)
   const pkgDirPath = resolve(globalConfig.storeDir, pkgName.replace('/', '+'), `v${pkgVersion}`)
   const destPath = resolve(pkgDirPath, tarballName)
   const logger = createLogger()
 
-  // TODO: support relative paths from process.cwd()
   // TODO: add validation for tarball filename - should be of the form "<name>-<version>.tgz"
 
   if (!existsSync(pkgDirPath)) await mkdir(pkgDirPath, { recursive: true })
@@ -62,10 +66,7 @@ async function doAdd(pathToTarball: string, globalConfig: Readonly<LikiConfigTyp
   logger.success(`"${tarballName}" added to store`)
 }
 
-async function extractPkgNameAndVersion(
-  pathToTarball: string,
-  globalConfig: Readonly<LikiConfigType>
-): Promise<{
+async function extractPkgNameAndVersion(pathToTarball: string): Promise<{
   name: string
   version: string
 }> {

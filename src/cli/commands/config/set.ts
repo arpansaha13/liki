@@ -1,10 +1,10 @@
 import mri from 'mri'
 import { homedir } from 'node:os'
-import { resolve } from 'node:path'
 import { existsSync } from 'node:fs'
+import { resolve } from 'node:path'
 
 import createLogger from '~/logger'
-import { writeJsonFile } from '~/utils/base'
+import { makeAbsolute, writeJsonFile } from '~/utils/base'
 import { getGlobalConfig, type LikiConfigType } from '~/utils/config'
 
 const logger = createLogger()
@@ -24,7 +24,11 @@ export default async function setConfig() {
   const globalConfigOptions = new Set<keyof LikiConfigType>(['pkgManager', 'storeDir'])
 
   // args._[0] is `config` and args._[1] is `set`
-  const [, , key, value] = args._
+  const key = args._[2]
+  let value = args._[3]
+
+  // Ensure that the path is absolute
+  if (key === 'storeDir') value = makeAbsolute(value)
 
   const isValid = validateOption(key as keyof LikiConfigType, value)
   if (!isValid) process.exit(1)
@@ -45,7 +49,7 @@ function validateOption(key: keyof LikiConfigType, value: any): boolean {
       }
       break
     case 'storeDir':
-      if (!existsSync(resolve(value))) {
+      if (!existsSync(value)) {
         logger.error(`The given path "${value}" could not be resolved.`)
         return false
       }

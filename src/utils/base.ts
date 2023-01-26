@@ -1,3 +1,4 @@
+import { isAbsolute, resolve } from 'node:path'
 import { readFile, writeFile } from 'node:fs/promises'
 
 export const rDefault = (r: any) => r.default()
@@ -17,4 +18,10 @@ export async function readJsonFile(path: string) {
 
 export function writeJsonFile(path: string, json: Object): Promise<void> {
   return writeFile(path, JSON.stringify(json))
+}
+
+/** If the path is relative, then convert it to absolute with respect to process.cwd(). */
+export function makeAbsolute(path: string) {
+  if (!isAbsolute(path)) return resolve(process.cwd(), path)
+  return path
 }
